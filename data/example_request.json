@@ -1,0 +1,43 @@
+{
+  "mode": "batch",
+  "employees": [
+    {
+      "employee_id": "E001",
+      "workplace_address": "Астана, Тұран даңғылы, 24",
+      "shift_end": "22:00",
+      "request_time": "22:05",
+      "home_address": "Астана, переулок Жауказын, 5",
+      "passengers": 1
+    },
+    {
+      "employee_id": "E002",
+      "workplace_address": "Астана, Сығанақ көшесі, 60/5",
+      "shift_end": "22:00",
+      "request_time": "22:06",
+      "home_address": "Астана, Сауран көшесі, 6",
+      "passengers": 1
+    },
+    {
+      "employee_id": "E003",
+      "workplace_address": "Астана, Тұран даңғылы, 24",
+      "shift_end": "22:00",
+      "request_time": "22:14",
+      "home_address": "Астана, Мәңгілік Ел даңғылы, 45кH",
+      "passengers": 1
+    }
+  ],
+  "vehicles": [
+    {
+      "vehicle_id": "CAR-01",
+      "capacity": 4,
+      "start_address": "Астана, Қабанбай Батыр даңғылы, 62",
+      "color": "red"
+    },
+    {
+      "vehicle_id": "CAR-02",
+      "capacity": 4,
+      "start_address": "Астана, Тұран даңғылы, 37",
+      "color": "green"
+    }
+  ]
+}

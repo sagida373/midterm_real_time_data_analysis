@@ -1,0 +1,331 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Employee Dispatch — API and Map</title>
+
+  <style>
+    body {
+      margin: 0;
+      font: 15px system-ui;
+      background: #f4f6f8;
+      color: #17253a;
+    }
+
+    header {
+      padding: 14px 20px;
+      background: #17253a;
+      color: white;
+    }
+
+    header a {
+      color: #83bfff;
+    }
+
+    main {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      height: calc(100vh - 95px);
+    }
+
+    section {
+      padding: 10px;
+      display: flex;
+      flex-direction: column;
+      gap: 8px;
+      min-width: 0;
+    }
+
+    iframe {
+      width: 100%;
+      flex: 1;
+      border: 1px solid #ccc;
+      background: white;
+    }
+
+    button,
+    input {
+      padding: 7px;
+      font: inherit;
+    }
+
+    #status {
+      font-size: 13px;
+    }
+
+    #json {
+      height: 160px;
+      font: 12px monospace;
+    }
+
+    #answer {
+      max-height: 200px;
+      overflow: auto;
+      white-space: pre-wrap;
+    }
+
+    label {
+      display: flex;
+      gap: 5px;
+    }
+
+    input {
+      flex: 1;
+      min-width: 0;
+    }
+
+    @media (max-width: 850px) {
+      main {
+        grid-template-columns: 1fr;
+        height: auto;
+      }
+
+      iframe {
+        height: 65vh;
+        flex: auto;
+      }
+    }
+  </style>
+</head>
+
+<body>
+  <header>
+    <b>Employee Dispatch</b>
+    <div id="status">Loading state…</div>
+  </header>
+
+  <main>
+    <section>
+      <div>
+        Enter JSON and click Calculate.
+        Or use POST /api/optimize in Swagger below.
+      </div>
+
+      <textarea id="json" aria-label="Passenger JSON"></textarea>
+
+      <div>
+        <button id="calculate" type="button">Calculate JSON</button>
+        <button id="example" type="button">Example</button>
+        <span id="planstatus"></span>
+      </div>
+
+      <details>
+        <summary>JSON response</summary>
+        <pre id="answer"></pre>
+      </details>
+
+      <iframe title="Swagger API" src="/docs"></iframe>
+    </section>
+
+    <section>
+      <div id="controls">
+        CSV simulation:
+        <button type="button" data-action="start">Start</button>
+        <button type="button" data-action="pause">Pause</button>
+        <button type="button" data-action="step">Step</button>
+        <button type="button" data-action="finish">Finish</button>
+        <button type="button" data-action="reset">Reset</button>
+        <span id="controlstatus"></span>
+      </div>
+
+      <label>
+        JSON result map:
+        <input
+          id="mapurl"
+          placeholder="Paste map_url from the response, e.g. /maps/…"
+        >
+        <button id="show" type="button">Show</button>
+        <button id="csv" type="button">CSV</button>
+      </label>
+
+      <iframe id="map" title="Road routes" src="/map"></iframe>
+    </section>
+  </main>
+
+  <script>
+    let live = true;
+    let last = "";
+
+    async function readResponse(response) {
+      const result = await response.json();
+
+      if (!response.ok) {
+        const detail = result.detail ?? result;
+        throw new Error(
+          typeof detail === "string" ? detail : JSON.stringify(detail)
+        );
+      }
+
+      return result;
+    }
+
+    async function loadExample() {
+      try {
+        const response = await fetch("/api/example");
+        const example = await readResponse(response);
+
+        document.getElementById("json").value =
+          JSON.stringify(example, null, 2);
+      } catch (error) {
+        document.getElementById("planstatus").textContent =
+          "Error: " + error.message;
+      }
+    }
+
+    async function calculate() {
+      const button = document.getElementById("calculate");
+      const status = document.getElementById("planstatus");
+
+      button.disabled = true;
+      status.textContent = "Finding addresses and calculating…";
+
+      try {
+        const body = JSON.parse(document.getElementById("json").value);
+
+        const response = await fetch("/api/optimize", {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json"
+          },
+          body: JSON.stringify(body)
+        });
+
+        const result = await readResponse(response);
+
+        document.getElementById("answer").textContent =
+          JSON.stringify(result, null, 2);
+
+        document.getElementById("mapurl").value = result.map_url;
+
+        showPlan();
+
+        status.textContent =
+          "Complete: " + result.summary.delivered +
+          " delivered, " + result.summary.distance_travelled_km + " km";
+      } catch (error) {
+        status.textContent = "Error: " + error.message;
+      } finally {
+        button.disabled = false;
+      }
+    }
+
+    async function controlSimulation(action) {
+      const buttons = document.querySelectorAll("#controls button");
+      const status = document.getElementById("controlstatus");
+
+      buttons.forEach(button => {
+        button.disabled = true;
+      });
+
+      status.textContent = "Processing…";
+
+      try {
+        const response = await fetch("/api/control/" + action, {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json"
+          },
+          body: "{}"
+        });
+
+        await readResponse(response);
+
+        live = true;
+        last = "";
+        await refresh();
+
+        status.textContent = "Done: " + action;
+      } catch (error) {
+        status.textContent = "Error: " + error.message;
+      } finally {
+        buttons.forEach(button => {
+          button.disabled = false;
+        });
+      }
+    }
+
+    function showPlan() {
+      const value = document.getElementById("mapurl").value.trim();
+
+      if (!/^\/maps\/[0-9a-f]{32}$/.test(value)) {
+        document.getElementById("planstatus").textContent =
+          "Paste map_url from the JSON response";
+        return;
+      }
+
+      live = false;
+      document.getElementById("map").src = value;
+    }
+
+    async function showLive() {
+      live = true;
+      last = "";
+      await refresh();
+    }
+
+    async function refresh() {
+      try {
+        const response = await fetch("/api/state");
+        const state = await readResponse(response);
+        const status = document.getElementById("status");
+
+        if (state.error) {
+          status.textContent = "Error: " + state.error;
+          return;
+        }
+
+        const metrics = state.metrics;
+        const time = state.timestamp?.slice(11, 16) ?? "";
+
+        const mode = state.running
+          ? "running"
+          : state.finished
+            ? "finished"
+            : "paused";
+
+        status.textContent =
+          time +
+          " · requests " + metrics.received +
+          " · waiting " + metrics.waiting +
+          " · delivered " + metrics.delivered +
+          " · " + mode;
+
+        const key = JSON.stringify(
+          state.trips?.map(trip => trip.trip_id)
+        );
+
+        if (live && key !== last) {
+          last = key;
+          document.getElementById("map").src = "/map?t=" + Date.now();
+        }
+      } catch (error) {
+        document.getElementById("status").textContent =
+          "Server unavailable: " + error.message;
+      }
+    }
+
+    document.getElementById("calculate")
+      .addEventListener("click", calculate);
+
+    document.getElementById("example")
+      .addEventListener("click", loadExample);
+
+    document.getElementById("show")
+      .addEventListener("click", showPlan);
+
+    document.getElementById("csv")
+      .addEventListener("click", showLive);
+
+    document.querySelectorAll("#controls button").forEach(button => {
+      button.addEventListener("click", () => {
+        controlSimulation(button.dataset.action);
+      });
+    });
+
+    loadExample();
+    refresh();
+    setInterval(refresh, 2500);
+  </script>
+</body>
+</html>

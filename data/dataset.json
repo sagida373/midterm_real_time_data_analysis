@@ -1,0 +1,151 @@
+{
+  "mode": "stream",
+  "employees": [
+    {
+      "employee_id": "E001",
+      "workplace_address": "Астана, Тұран даңғылы, 24",
+      "shift_end": "22:00",
+      "request_time": "22:05",
+      "home_address": "Астана, переулок Жауказын, 5",
+      "passengers": 1
+    },
+    {
+      "employee_id": "E002",
+      "workplace_address": "Астана, Сығанақ көшесі, 60/5",
+      "shift_end": "22:00",
+      "request_time": "22:06",
+      "home_address": "Астана, Сауран көшесі, 6",
+      "passengers": 1
+    },
+    {
+      "employee_id": "E003",
+      "workplace_address": "Астана, Тұран даңғылы, 24",
+      "shift_end": "22:00",
+      "request_time": "22:14",
+      "home_address": "Астана, Мәңгілік Ел даңғылы, 45кH",
+      "passengers": 1
+    },
+    {
+      "employee_id": "E004",
+      "workplace_address": "Астана, Қабанбай Батыр даңғылы, 62",
+      "shift_end": "22:00",
+      "request_time": "22:16",
+      "home_address": "Астана, улица Кадыргали Жалайыри, 36",
+      "passengers": 1
+    },
+    {
+      "employee_id": "E005",
+      "workplace_address": "Астана, Қабанбай Батыр даңғылы, 62",
+      "shift_end": "22:00",
+      "request_time": "22:18",
+      "home_address": "Астана, Отырар көшесі, 11",
+      "passengers": 1
+    },
+    {
+      "employee_id": "E006",
+      "workplace_address": "Астана, Қабанбай Батыр даңғылы, 62",
+      "shift_end": "22:00",
+      "request_time": "22:19",
+      "home_address": "Астана, Амман көшесі, 6",
+      "passengers": 1
+    },
+    {
+      "employee_id": "E007",
+      "workplace_address": "Астана, Тұран даңғылы, 37",
+      "shift_end": "22:00",
+      "request_time": "22:28",
+      "home_address": "Астана, Түркістан көшесі, 14/1",
+      "passengers": 1
+    },
+    {
+      "employee_id": "E008",
+      "workplace_address": "Астана, Сығанақ көшесі, 60/5",
+      "shift_end": "22:00",
+      "request_time": "22:32",
+      "home_address": "Астана, улица Степана Разина, 17",
+      "passengers": 1
+    },
+    {
+      "employee_id": "E009",
+      "workplace_address": "Астана, Тұран даңғылы, 37",
+      "shift_end": "22:00",
+      "request_time": "22:33",
+      "home_address": "Астана, Бөгенбай Батыр даңғылы, 55",
+      "passengers": 1
+    },
+    {
+      "employee_id": "E010",
+      "workplace_address": "Астана, Қабанбай Батыр даңғылы, 62",
+      "shift_end": "22:00",
+      "request_time": "22:35",
+      "home_address": "Астана, Ақмешіт көшесі, 9/1",
+      "passengers": 1
+    },
+    {
+      "employee_id": "E011",
+      "workplace_address": "Астана, Тұран даңғылы, 24",
+      "shift_end": "22:00",
+      "request_time": "22:36",
+      "home_address": "Астана, Әбікен Бектұров көшесі, 4/6",
+      "passengers": 1
+    },
+    {
+      "employee_id": "E012",
+      "workplace_address": "Астана, Тұран даңғылы, 37",
+      "shift_end": "22:00",
+      "request_time": "22:37",
+      "home_address": "Астана, Роза Бағланова көшесі, 2",
+      "passengers": 1
+    },
+    {
+      "employee_id": "E013",
+      "workplace_address": "Астана, Тұран даңғылы, 24",
+      "shift_end": "22:00",
+      "request_time": "22:38",
+      "home_address": "Астана, Әлихан Бөкейхан көшесі, 21/2",
+      "passengers": 1
+    },
+    {
+      "employee_id": "E014",
+      "workplace_address": "Астана, Тұран даңғылы, 24",
+      "shift_end": "22:00",
+      "request_time": "22:39",
+      "home_address": "Астана, Тұран даңғылы, 54",
+      "passengers": 1
+    },
+    {
+      "employee_id": "E015",
+      "workplace_address": "Астана, Сығанақ көшесі, 60/5",
+      "shift_end": "22:00",
+      "request_time": "22:40",
+      "home_address": "Астана, улица Талшын, 41А",
+      "passengers": 1
+    }
+  ],
+  "vehicles": [
+    {
+      "vehicle_id": "CAR-01",
+      "capacity": 4,
+      "start_address": "Астана, Қабанбай Батыр даңғылы, 62",
+      "color": "red"
+    },
+    {
+      "vehicle_id": "CAR-02",
+      "capacity": 4,
+      "start_address": "Астана, Тұран даңғылы, 37",
+      "color": "green"
+    },
+    {
+      "vehicle_id": "CAR-03",
+      "capacity": 4,
+      "start_address": "Астана, Тұран даңғылы, 24",
+      "color": "orange"
+    },
+    {
+      "vehicle_id": "CAR-04",
+      "capacity": 4,
+      "start_address": "Астана, Сығанақ көшесі, 60/5",
+      "color": "purple"
+    }
+  ]
+}
